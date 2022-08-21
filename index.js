@@ -11,44 +11,38 @@ let accessT,accessSec,userId,paginationToken;
 app.get("/callback", async function (req, response) {
     try {
       console.log(req.query);
-      await client.getAccessToken({
+  const res =   await client.getAccessToken({
     oauth_verifier: req.query.oauth_verifier,
     oauth_token: req.query.oauth_token
   })
-  .then( async (res) =>{
-    console.log({
-        accTkn: res.oauth_token,
-        accTknSecret: res.oauth_token_secret,
-        userId: res.user_id,
-        screenName: res.screen_name
-      });
-      accessT=res.oauth_token;
-      accessSec=res.oauth_token_secret;
-      userId=res.user_id;
+  console.log({
+    accTkn: res.oauth_token,
+    accTknSecret: res.oauth_token_secret,
+    userId: res.user_id,
+    screenName: res.screen_name
+  });
+  accessT=res.oauth_token;
+  accessSec=res.oauth_token_secret;
+  userId=res.user_id;
 
-      const client2 = new twitter({
-        extension:null,
-        version:2,
-        consumer_key: "5jPwCAzBCvCfmcV8Ws2zALiY7",
-        consumer_secret: "1GE8xzrsH3Hyxh2ErrqHQNGyyFjAMyasHtNJPfcFRHAVDKnkj7",
-        access_token_key: accessT,
-        access_token_secret: accessSec
-    });
-   const res2= await client2.get(`users/${res.user_id}/timelines/reverse_chronological`,{
-            start_time:new Date(Date.now()-7*24*60*60*1000).toISOString(),
-            "tweet.fields":"entities,author_id",
-            "expansions":"author_id"
-       })
-      paginationToken=res2.meta.next_token;
-      response.send(res2);
-    //   response.json(res);
-  }
-    
-  )
-  .catch(console.error);
-    } catch (error) {
-      console.log(error);
-    }
+  const client2 = new twitter({
+    extension:null,
+    version:2,
+    consumer_key: "5jPwCAzBCvCfmcV8Ws2zALiY7",
+    consumer_secret: "1GE8xzrsH3Hyxh2ErrqHQNGyyFjAMyasHtNJPfcFRHAVDKnkj7",
+    access_token_key: accessT,
+    access_token_secret: accessSec
+});
+const res2= await client2.get(`users/${res.user_id}/timelines/reverse_chronological`,{
+        start_time:new Date(Date.now()-7*24*60*60*1000).toISOString(),
+        "tweet.fields":"entities,author_id",
+        "expansions":"author_id"
+   })
+  paginationToken=res2.meta.next_token;
+  response.send(res2);
+//   response.json(res);
+}
+
   });
   
   app.get("/login", async function (req, response) {
@@ -79,6 +73,7 @@ app.get("/callback", async function (req, response) {
     let flag = true;
     let data = [];
     let users =[];
+    let counter =0;
     while(flag)
     {
         await client2.get(`users/${userId}/timelines/reverse_chronological`,{
@@ -90,6 +85,7 @@ app.get("/callback", async function (req, response) {
             res2=>{
                 if(res2.data)
                 {
+                    counter++;
                     data.push.apply(data,res2.data);
                     users.push.apply(users,res2.includes.users);
                     console.log(res2.data);
@@ -106,7 +102,8 @@ app.get("/callback", async function (req, response) {
     }
     res.json({
         data,
-        users
+        users,
+        counter
     });
        
   });
