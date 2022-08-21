@@ -8,9 +8,6 @@ async function fetchTweets(userClient, userId) {
     });
     let tweets =[...firstPage.data];
     let usersMap={}
-    usersData.forEach(user => {
-        usersMap[user.id]=user;
-    });
     let fetches =1;
     let paginationToken=firstPage.meta.next_token;
     let flag = paginationToken?true:false;
