@@ -53,7 +53,7 @@ app.get("/callback", async function (req, response) {
   
   app.get("/login", async function (req, response) {
     await client
-  .getRequestToken("http://127.0.0.1:3000/callback")
+  .getRequestToken("https://plum-top-links.herokuapp.com/callback")
   .then(res =>{
       console.log({
         reqTkn: res.oauth_token,
