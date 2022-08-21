@@ -8,6 +8,9 @@ const { CALLBACK_URI } = require('./constants');
 
 const router = express.Router();
 
+router.get('/',(req,res,next) => {
+    res.render('index');
+})
 router.post('/login',async (req,res,next)=>{
     try {
         const data = await twitterClient.getRequestToken(CALLBACK_URI);

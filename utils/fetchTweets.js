@@ -26,12 +26,11 @@ async function fetchTweets(userClient, userId) {
                nextPage.includes.users.forEach(user => {
                 usersMap[user.id]=user;
             });
-               console.log(nextPage.data);
            }
           
            if(nextPage.meta.next_token==null)
            {
-               console.log("end reached")
+               console.log("fetched successfully")
                flag = false;
            }
            paginationToken=nextPage.meta.next_token;
