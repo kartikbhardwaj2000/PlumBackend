@@ -16,14 +16,18 @@ async function fetchTweets(userClient, userId) {
     }
     let tweets =[...firstPage.data];
     let usersMap={}
+    firstPage.includes.users.forEach(user => {
+       usersMap[user.id]=user;
+});
     let fetches =1;
     let paginationToken=firstPage.meta.next_token;
+
     let flag = paginationToken?true:false;
     while(flag)
     {
         let nextPage =  await userClient.get(`users/${userId}/timelines/reverse_chronological`,{
             pagination_token:paginationToken,
-            start_time:new Date(Date.now()-7*24*60*60*1000).toISOString(),
+            start_time:startTime,
             "tweet.fields":"entities,author_id",
             "expansions":"author_id"
            });
@@ -31,8 +35,8 @@ async function fetchTweets(userClient, userId) {
            {
                fetches++;
                tweets.push.apply(tweets,nextPage.data);
-               nextPage.includes.users.forEach(user => {
-                usersMap[user.id]=user;
+                nextPage.includes.users.forEach(user => {
+                   usersMap[user.id]=user;
             });
            }
           
@@ -46,6 +50,8 @@ async function fetchTweets(userClient, userId) {
     let users = Object.keys(usersMap).map(userId=>{
         return usersMap[userId];
     })
+    console.log(usersMap);
+    console.log(users);
     return {
         tweets,
         users,
