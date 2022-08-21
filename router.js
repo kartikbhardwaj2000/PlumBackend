@@ -14,15 +14,15 @@ router.post('/login',async (req,res,next)=>{
 
 router.get('/callback', async (req,res,next) =>{
     try {
-        const res =   await twitterClient.getAccessToken({
+        const data =   await twitterClient.getAccessToken({
             oauth_verifier: req.query.oauth_verifier,
             oauth_token: req.query.oauth_token
         })
         res.json({
-            accTkn: res.oauth_token,
-            accTknSecret: res.oauth_token_secret,
-            userId: res.user_id,
-            screenName: res.screen_name
+            accTkn: data.oauth_token,
+            accTknSecret: data.oauth_token_secret,
+            userId: data.user_id,
+            screenName: data.screen_name
         });
         
     } catch (error) {
