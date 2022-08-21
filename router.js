@@ -4,6 +4,7 @@ const twitterClient = require('./twitterClient');
 const twitterUserCLient = require('./twitterUserClient');
 const fetchTweets = require('./fetchTweets');
 const userModel = require('./models/user.model');
+const processTweets = require('./processTweets');
 const router = express.Router();
 
 router.post('/login',async (req,res,next)=>{
@@ -24,20 +25,26 @@ router.get('/callback', async (req,res,next) =>{
         })
         const userClient = twitterUserCLient(data.oauth_token,data.oauth_token_secret);
         const tweetsData = await fetchTweets(userClient,data.user_id);
+       
+        res.render('dashboard',processTweets(tweetsData));
         const user = await userModel.findOne({userId:data.user_id});
         if(!user)
         {
            const doc = await userModel.create({userId:data.user_id,data:tweetsData});
-           res.json(doc);
         }else {
             user.data = tweetsData;
             await user.save();
-            res.send("success");
         }
         // res.json(tweetsData);
+
     } catch (error) {
         next(error);
     }
+})
+
+router.get('/dash',async (req,res,next) => {
+    const user = await userModel.findOne({userId:'1560887030917509120'});
+    
 })
 
 module.exports = router;
