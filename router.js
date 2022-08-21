@@ -1,10 +1,11 @@
 const express = require('express');
-const { CALLBACK_URI } = require('./constants');
-const twitterClient = require('./twitterClient');
-const twitterUserCLient = require('./twitterUserClient');
-const fetchTweets = require('./fetchTweets');
+const twitterClient = require('./utils/twitterClient');
+const twitterUserCLient = require('./utils/twitterUserClient');
+const fetchTweets = require('./utils/fetchTweets');
 const userModel = require('./models/user.model');
-const processTweets = require('./processTweets');
+const processTweets = require('./utils/processTweets');
+const { CALLBACK_URI } = require('./constants');
+
 const router = express.Router();
 
 router.post('/login',async (req,res,next)=>{

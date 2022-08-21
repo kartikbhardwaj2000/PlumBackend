@@ -1,12 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
-const { PORT, MONGO_URI } = require("./constants");
 const { route } = require('./router');
 const router = require('./router');
+const { PORT, MONGO_URI } = require("./constants");
 const app = express();
 
-//
+
 //connect to mongodb atlas instance
 mongoose.connect(MONGO_URI,(err) => {
     if(err)
@@ -16,6 +15,7 @@ mongoose.connect(MONGO_URI,(err) => {
     }
     console.log('mongodb connected ');
 })
+
 app.set('view engine', 'ejs')
 
 app.use(express.static('public'));

@@ -1,5 +1,5 @@
 const twitter = require('twitter-lite');
-const { CONSUMER_KEY, CONSUMER_SECRET } = require('./constants');
+const { CONSUMER_KEY, CONSUMER_SECRET } = require('../constants');
 const createUserClient = function(access_token_key, access_token_secret){
     const client = new twitter({
         consumer_key: CONSUMER_KEY,
