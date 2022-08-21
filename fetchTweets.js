@@ -7,7 +7,10 @@ async function fetchTweets(userClient, userId) {
         "expansions":"author_id"
     });
     let tweets =[...firstPage.data];
-    let users=  [...firstPage.includes.users];
+    let usersMap={}
+    usersData.forEach(user => {
+        usersMap[user.id]=user;
+    });
     let fetches =1;
     let paginationToken=firstPage.meta.next_token;
     let flag = paginationToken?true:false;
@@ -23,7 +26,9 @@ async function fetchTweets(userClient, userId) {
            {
                fetches++;
                tweets.push.apply(tweets,nextPage.data);
-               users.push.apply(users,nextPage.includes.users);
+               nextPage.includes.users.forEach(user => {
+                usersMap[user.id]=user;
+            });
                console.log(nextPage.data);
            }
           
@@ -34,6 +39,9 @@ async function fetchTweets(userClient, userId) {
            }
            paginationToken=nextPage.meta.next_token;
     }
+    let users = Object.keys(usersMap).map(userId=>{
+        return usersMap[userId];
+    })
     return {
         tweets,
         users,
@@ -41,4 +49,6 @@ async function fetchTweets(userClient, userId) {
     }
 
 }
+
+console.log(fetchTweets(null,null));
 module.exports = fetchTweets;
