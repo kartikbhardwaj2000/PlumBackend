@@ -49,6 +49,4 @@ async function fetchTweets(userClient, userId) {
     }
 
 }
-
-console.log(fetchTweets(null,null));
 module.exports = fetchTweets;
