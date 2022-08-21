@@ -19,10 +19,15 @@ router.post('/login',async (req,res,next)=>{
 
 router.get('/callback', async (req,res,next) =>{
     try {
+        if(!req.query.oauth_verifier)
+        {
+           return res.send('permission is required for processing');
+        }
         const data =   await twitterClient.getAccessToken({
             oauth_verifier: req.query.oauth_verifier,
             oauth_token: req.query.oauth_token
         })
+
         const userClient = twitterUserCLient(data.oauth_token,data.oauth_token_secret);
         const tweetsData = await fetchTweets(userClient,data.user_id);
        
@@ -35,16 +40,8 @@ router.get('/callback', async (req,res,next) =>{
             user.data = tweetsData;
             await user.save();
         }
-        // res.json(tweetsData);
-
     } catch (error) {
         next(error);
     }
 })
-
-router.get('/dash',async (req,res,next) => {
-    const user = await userModel.findOne({userId:'1560887030917509120'});
-    
-})
-
 module.exports = router;
