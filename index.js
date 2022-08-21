@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const { route } = require('./router');
 const router = require('./router');
 const { PORT, MONGO_URI } = require("./constants");
+const errorHandler = require('./utils/errorHandler');
 const app = express();
 
 
@@ -19,6 +20,8 @@ mongoose.connect(MONGO_URI,(err) => {
 app.set('view engine', 'ejs')
 
 app.use(router);
+
+app.use(errorHandler)
 
 app.listen(PORT,()=>{
     console.log(`app running ar PORT ${PORT}`);

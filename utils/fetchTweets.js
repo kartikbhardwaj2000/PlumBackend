@@ -6,6 +6,14 @@ async function fetchTweets(userClient, userId) {
         "tweet.fields":"entities,author_id",
         "expansions":"author_id"
     });
+    if(firstPage.meta.result_count ==0)
+    {
+        return {
+            tweets:[],
+            users:[],
+            fetches:0
+        }
+    }
     let tweets =[...firstPage.data];
     let usersMap={}
     let fetches =1;
