@@ -29,9 +29,11 @@ router.get('/callback', async (req,res,next) =>{
         {
            const doc = await userModel.create({userId:data.user_id,data:tweetsData});
            res.json(doc);
-        }else [
-
-        ]
+        }else {
+            user.data = tweetsData;
+            await user.save();
+            res.send("success");
+        }
         // res.json(tweetsData);
     } catch (error) {
         next(error);
